@@ -6,9 +6,8 @@
 
 import { Button, React, TextArea, useState } from "@webpack/common";
 
-import { missing } from "./health";
+import { missing, S } from "./index";
 import { exported, importFrom } from "./store";
-import { S } from "./strings";
 
 function Health() {
     const unreached = missing();

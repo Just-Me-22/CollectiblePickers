@@ -8,9 +8,9 @@ import { useForceUpdater } from "@utils/react";
 import { React, SearchableSelect, useEffect, useMemo, useRef } from "@webpack/common";
 
 import { onPresentChange, presentCategories } from "./catalog";
+import { S } from "./index";
 import { settings, SORTS } from "./settings";
 import { favouriteIds, isFavourite, notify, recentIds, subscribe, toggleFavourite } from "./store";
-import { S } from "./strings";
 
 function useStore() {
     const update = useForceUpdater();

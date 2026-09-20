@@ -12,11 +12,44 @@ import { React } from "@webpack/common";
 
 import { About } from "./About";
 import { acquiredAt, categoryOf, Item, notePresent, presentCategories } from "./catalog";
-import { reached } from "./health";
 import { settings, SORTS } from "./settings";
 import { commitRecent, favouriteIds, isFavourite, load, notify, recentIds, remember, tick } from "./store";
-import { S } from "./strings";
 import { FavButton, Live, PinnedHeader, Toolbar } from "./ui";
+
+export const S = {
+    favourites: "Favourites",
+    recent: "Recent",
+    allCategories: "All categories",
+    sortLabel: "Sort",
+    categoryLabel: "Category",
+    add: "Add to favourites",
+    remove: "Remove from favourites",
+    noFavourites: "No favourites yet. Tragic.",
+    nothingHere: "Nothing in this category.",
+    collapse: "Collapse",
+    expand: "Expand",
+
+    healthy: "Working in all four pickers.",
+    unreached: "Not reached yet",
+    unreachedHint: "Open each picker once. Whatever is still listed has stopped matching Discord.",
+
+    backup: "Backup",
+    copy: "Copy",
+    copied: "Copied",
+    copyFailed: "Could not reach the clipboard",
+    importLabel: "Paste a backup to restore it",
+    importAction: "Restore",
+    imported: (n: number) => `Restored ${n} favourites`,
+    importFailed: "That is not a backup"
+} as const;
+
+export const PARTS = ["sections", "toolbar", "grid", "favourite"] as const;
+export type Part = typeof PARTS[number];
+
+const seen = new Set<Part>();
+
+export const reached = (part: Part) => void seen.add(part);
+export const missing = () => PARTS.filter(part => !seen.has(part));
 
 type Section = { section: string; items: Item[]; height: number; header: React.ReactNode; };
 
