@@ -10,7 +10,6 @@ import { Logger } from "@utils/Logger";
 import definePlugin from "@utils/types";
 import { React } from "@webpack/common";
 
-import { About } from "./About";
 import { acquiredAt, categoryOf, Item, notePresent, presentCategories } from "./catalog";
 import { settings, SORTS } from "./settings";
 import { commitRecent, favouriteIds, isFavourite, load, notify, recentIds, remember, tick } from "./store";
@@ -29,12 +28,11 @@ export const S = {
     collapse: "Collapse",
     expand: "Expand",
 
-    healthy: "Working in all four pickers.",
     unreached: "Not reached yet",
-    unreachedHint: "Open each picker once. Whatever is still listed has stopped matching Discord.",
 
-    backup: "Backup",
+    backup: "Favourites backup",
     copy: "Copy",
+    restoreToggle: "Restore…",
     copied: "Copied",
     copyFailed: "Could not reach the clipboard",
     importLabel: "Paste a backup to restore it",
@@ -53,13 +51,13 @@ export const missing = () => PARTS.filter(part => !seen.has(part));
 
 type Section = { section: string; items: Item[]; height: number; header: React.ReactNode; };
 
-const logger = new Logger("CollectiblePickers");
+const logger = new Logger("CollectibleShelf");
 
 const PLACEHOLDERS = new Set(["None", "Shop"]);
 const real = (item: Item) => !PLACEHOLDERS.has(item.skuId);
 
-const FAVOURITES = "vc-cp-favourites";
-const RECENT = "vc-cp-recent";
+const FAVOURITES = "vc-cs-favourites";
+const RECENT = "vc-cs-recent";
 
 const SEED_RECENT = 6;
 
@@ -101,11 +99,10 @@ function seeded(from: Section[]) {
 }
 
 export default definePlugin({
-    name: "CollectiblePickers",
+    name: "CollectibleShelf",
     description: "Favourite collectibles, keep the last ones you used to hand, and sort and filter every picker.",
     authors: [{ name: "Just-Me-22", id: 0n }],
     settings,
-    settingsAboutComponent: About,
 
     patches: [
         {

@@ -7,6 +7,7 @@
 import { definePluginSettings } from "@api/Settings";
 import { OptionType } from "@utils/types";
 
+import { BackupPanel } from "./Backup";
 import { categoryOf, Item, nameOf } from "./catalog";
 
 const byName = (a: Item, b: Item) =>
@@ -61,5 +62,10 @@ export const settings = definePluginSettings({
         type: OptionType.BOOLEAN,
         description: "Fill that row with your newest collectibles until you have picked anything",
         default: true
+    },
+    backup: {
+        type: OptionType.COMPONENT,
+        description: "",
+        component: BackupPanel
     }
 });

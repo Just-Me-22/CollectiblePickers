@@ -8,7 +8,7 @@ import { DataStore } from "@api/index";
 import { Logger } from "@utils/Logger";
 import { UserStore } from "@webpack/common";
 
-const logger = new Logger("CollectiblePickers");
+const logger = new Logger("CollectibleShelf");
 const KEY = "CollectiblePickers_v1";
 const RECENTS_CAP = 12;
 

@@ -45,7 +45,7 @@ export function FavButton({ skuId }: { skuId?: string; }) {
 
     return (
         <button
-            className="vc-cp-fav"
+            className="vc-cs-fav"
             aria-pressed={favourited}
             aria-label={favourited ? S.remove : S.add}
             data-on={favourited || undefined}
@@ -77,7 +77,7 @@ function Segmented() {
     return (
         <div
             ref={group}
-            className="vc-cp-segmented"
+            className="vc-cs-segmented"
             role="group"
             aria-label={S.sortLabel}
             onKeyDown={event => {
@@ -93,7 +93,7 @@ function Segmented() {
                 return (
                     <button
                         key={key}
-                        className="vc-cp-seg"
+                        className="vc-cs-seg"
                         aria-pressed={active}
                         tabIndex={active ? 0 : -1}
                         onClick={() => {
@@ -113,7 +113,7 @@ function Segmented() {
 function Chevron({ open }: { open: boolean; }) {
     return (
         <svg
-            className="vc-cp-chevron"
+            className="vc-cs-chevron"
             width="12"
             height="12"
             viewBox="0 0 24 24"
@@ -131,7 +131,7 @@ export function PinnedHeader({ label, setting }: { label: string; setting: "coll
 
     return (
         <button
-            className="vc-cp-head"
+            className="vc-cs-head"
             aria-expanded={!collapsed}
             aria-label={collapsed ? S.expand : S.collapse}
             onClick={() => {
@@ -159,9 +159,9 @@ export function Toolbar({ empty }: { empty: boolean; }) {
 
     return (
         <>
-            <div className="vc-cp-bar">
+            <div className="vc-cs-bar">
                 {categories.length > 1 && (
-                    <div className="vc-cp-select">
+                    <div className="vc-cs-select">
                         <SearchableSelect
                             options={options}
                             value={options.find(o => o.value === chosen)?.value}
@@ -179,7 +179,7 @@ export function Toolbar({ empty }: { empty: boolean; }) {
             </div>
 
             {(anyPinned === 0 || empty) && (
-                <div className="vc-cp-empty">
+                <div className="vc-cs-empty">
                     <Heart filled={false} />
                     {empty ? S.nothingHere : S.noFavourites}
                 </div>

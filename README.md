@@ -1,4 +1,4 @@
-# CollectiblePickers
+# CollectibleShelf
 
 An Equicord userplugin for Discord's collectible pickers: nameplates, avatar decorations,
 profile effects and profile frames.
@@ -16,4 +16,4 @@ profile effects and profile frames.
 ## Installing
 
 Drop this folder into `src/userplugins/` in an Equicord dev build, run `pnpm build`, and
-enable **CollectiblePickers** in settings.
+enable **CollectibleShelf** in settings.
