@@ -130,13 +130,13 @@ export default definePlugin({
                     replace: "isPurchaseSection:$1===$2.PURCHASE||$self.isPinned($1)"
                 },
                 {
-                    match: /(onSelect|onClick):\(\)=>(\i)\((\i)\)/g,
+                    match: /(onSelect|onClick):\(\)=>(\i)\((?!null\))(\i)\)/g,
                     replace: "$1:()=>($self.picked($3),$2($3))"
                 },
                 {
                     noWarn: true,
-                    match: /(onSelect:\(\)=>(\i)\(\{skuId:(\i)\.skuId)/,
-                    replace: "onSelect:()=>($self.picked($3),$2({skuId:$3.skuId"
+                    match: /(onSelect:\(\)=>\i\(\{skuId:)(\i)\.skuId/,
+                    replace: "$1($self.picked($2),$2.skuId)"
                 },
                 {
                     noWarn: true,
@@ -198,9 +198,7 @@ export default definePlugin({
         return <FavButton skuId={skuId} />;
     },
 
-    picked: (item: Item | null) => safely("noting a selection", undefined, () => {
-        if (item?.skuId) remember(item.skuId);
-    }),
+    picked: (item: Item) => safely("noting a selection", undefined, () => remember(item.skuId)),
 
     applied: () => safely("recording an applied collectible", undefined, commitRecent),
 
