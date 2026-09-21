@@ -169,12 +169,6 @@
     line-height: 18px;
 }
 
-.vc-cs-restore {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 6px;
-}
 
 .vc-cs-row {
     display: flex;

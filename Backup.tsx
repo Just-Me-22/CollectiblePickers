@@ -4,7 +4,8 @@
  * SPDX-License-Identifier: GPL-3.0-or-later
  */
 
-import { Button, React, TextArea, useState } from "@webpack/common";
+import { chooseFile, saveFile } from "@utils/web";
+import { Button, React, useState } from "@webpack/common";
 
 import { missing, S } from "./index";
 import { exported, importFrom } from "./store";
@@ -21,10 +22,8 @@ function Health() {
 }
 
 function Backup() {
-    const [draft, setDraft] = useState("");
     const [note, setNote] = useState("");
     const [failed, setFailed] = useState(false);
-    const [restoring, setRestoring] = useState(false);
 
     return (
         <div className="vc-cs-backup">
@@ -37,57 +36,29 @@ function Backup() {
                     size={Button.Sizes.SMALL}
                     color={Button.Colors.PRIMARY}
                     onClick={() => {
-                        navigator.clipboard.writeText(exported())
-                            .then(() => { setFailed(false); setNote(S.copied); })
-                            .catch(() => { setFailed(true); setNote(S.copyFailed); });
+                        saveFile(new File([exported()], "collectible-shelf.json", { type: "application/json" }));
+                        setFailed(false);
+                        setNote(S.saved);
                     }}
                 >
-                    {S.copy}
+                    {S.save}
                 </Button>
 
                 <Button
                     size={Button.Sizes.SMALL}
                     color={Button.Colors.PRIMARY}
-                    onClick={() => {
-                        setRestoring(!restoring);
-                        setNote("");
-                        setDraft("");
+                    onClick={async () => {
+                        const file = await chooseFile("application/json,.json");
+                        if (!file) return;
+
+                        const count = importFrom(await file.text());
+                        setFailed(count === null);
+                        setNote(count === null ? S.importFailed : S.imported(count));
                     }}
                 >
-                    {S.restoreToggle}
+                    {S.restore}
                 </Button>
             </div>
-
-            {restoring && (
-                <div className="vc-cs-restore">
-                    <TextArea
-                        rows={2}
-                        value={draft}
-                        placeholder={S.importLabel}
-                        onChange={value => {
-                            setDraft(value);
-                            setNote("");
-                        }}
-                    />
-
-                    <Button
-                        size={Button.Sizes.SMALL}
-                        color={Button.Colors.BRAND}
-                        disabled={!draft.trim()}
-                        onClick={() => {
-                            const count = importFrom(draft);
-                            setFailed(count === null);
-                            setNote(count === null ? S.importFailed : S.imported(count));
-                            if (count !== null) {
-                                setDraft("");
-                                setRestoring(false);
-                            }
-                        }}
-                    >
-                        {S.importAction}
-                    </Button>
-                </div>
-            )}
         </div>
     );
 }

@@ -31,12 +31,9 @@ export const S = {
     unreached: "Not reached yet",
 
     backup: "Favourites backup",
-    copy: "Copy",
-    restoreToggle: "Restore…",
-    copied: "Copied",
-    copyFailed: "Could not reach the clipboard",
-    importLabel: "Paste a backup to restore it",
-    importAction: "Restore",
+    save: "Save to file",
+    restore: "Restore from file",
+    saved: "Saved",
     imported: (n: number) => `Restored ${n} favourites`,
     importFailed: "That is not a backup"
 } as const;
