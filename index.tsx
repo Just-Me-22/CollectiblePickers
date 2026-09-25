@@ -38,7 +38,7 @@ export const S = {
     importFailed: "That is not a backup"
 } as const;
 
-export const PARTS = ["sections", "toolbar", "grid", "favourite"] as const;
+export const PARTS = ["sections", "toolbar", "grid", "favourite", "pick"] as const;
 export type Part = typeof PARTS[number];
 
 const seen = new Set<Part>();
@@ -130,6 +130,7 @@ export default definePlugin({
                     replace: "isPurchaseSection:$1===$2.PURCHASE||$self.isPinned($1)"
                 },
                 {
+                    noWarn: true,
                     match: /(onSelect|onClick):\(\)=>(\i)\((?!null\))(\i)\)/g,
                     replace: "$1:()=>($self.picked($3),$2($3))"
                 },
@@ -238,7 +239,10 @@ export default definePlugin({
         });
     },
 
-    picked: (item: Item) => safely("noting a selection", undefined, () => remember(item.skuId)),
+    picked: (item: Item) => safely("noting a selection", undefined, () => {
+        reached("pick");
+        remember(item.skuId);
+    }),
 
     applied: () => safely("recording an applied collectible", undefined, commitRecent),
 
