@@ -58,6 +58,9 @@ const RECENT = "vc-cs-recent";
 
 const SEED_RECENT = 6;
 
+const PAGE = 48;
+const TILE = 'div[class*="nameplateItem__"]';
+
 type Collapsible = "collapsedFavourites" | "collapsedRecent";
 
 let emptied = false;
@@ -162,6 +165,11 @@ export default definePlugin({
                 },
                 {
                     noWarn: true,
+                    match: /children:(\i)\.map\((?=(\i)=>\(0,\i\.jsxs\)\(\i\.\i,\{gap:4,children:\[\(0,\i\.jsx\)\(\i\.\i,\{variant:"text-md\/medium",children:\2\.header\}\))/,
+                    replace: "children:$self.budget($1).map("
+                },
+                {
+                    noWarn: true,
                     match: /(\i)\.items\.filter\((\i\.\i)\)\.map\((\i)=>(\(0,\i\.jsx\)\(\i,\{currentUser:[\s\S]{0,220}?\},)\3\.skuId\)/,
                     replace: "$1.items.filter($2).map($3=>$4$3.skuId+\":\"+$1.section)"
                 }
@@ -193,6 +201,41 @@ export default definePlugin({
     favButton(skuId: string) {
         reached("favourite");
         return <FavButton skuId={skuId} />;
+    },
+
+    budget(list: Section[]): Section[] {
+        const [limit, setLimit] = React.useState(PAGE);
+        const total = list.reduce((n, section) => n + section.items.length, 0);
+
+        React.useEffect(() => {
+            if (limit >= total) return;
+
+            const tiles = document.querySelectorAll(TILE);
+            const last = tiles[tiles.length - 1];
+            if (!last) return;
+
+            const observer = new IntersectionObserver(entries => {
+                if (entries.some(entry => entry.isIntersecting)) setLimit(n => n + PAGE);
+            }, { root: last.closest('[class*="scroller"]'), rootMargin: "400px" });
+
+            observer.observe(last);
+            return () => observer.disconnect();
+        }, [limit, total]);
+
+        return safely("limiting the picker", list, () => {
+            let left = limit;
+            return list.flatMap(section => {
+                if (left >= section.items.length) {
+                    left -= section.items.length;
+                    return [section];
+                }
+                if (left <= 0 && section.items.length) return [];
+
+                const items = section.items.slice(0, left);
+                left = 0;
+                return [{ ...section, items }];
+            });
+        });
     },
 
     picked: (item: Item) => safely("noting a selection", undefined, () => remember(item.skuId)),
